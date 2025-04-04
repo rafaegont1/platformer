@@ -14,81 +14,100 @@ const uint64_t MAX_SPEED = MIN_FRAME_RATE * CELL_SIZE;
 
 ObjectType objectTypes[TYPE_COUNT];
 
-
-static inline bool ObjectList_empty(ObjectList* objs)
+void Types_ClearList(List* list)
 {
-    return objs->first == NULL;
-}
+    ListNode* iter = list->first;
 
-void ObjectList_init(ObjectList* objs)
-{
-    objs->first = NULL;
-    objs->last = NULL;
-}
-
-void ObjectList_append(ObjectList* objects, Object* object)
-{
-    ObjectListNode* new_node = (ObjectListNode*)malloc(sizeof(ObjectListNode));
-    new_node->data = object;
-    new_node->next = NULL;
-
-    if (ObjectList_empty(objects))
+    while (iter != NULL)
     {
-        objects->first = new_node;
-        objects->last = new_node;
-    }
-    else
-    {
-        objects->last->next = new_node;
-        objects->last = new_node;
-    }
-}
+        Object* obj = (Object*)iter->data;
 
-void ObjectList_free(ObjectList* objs)
-{
-    while (!ObjectList_empty(objs))
-    {
-        ObjectListNode* rm = objs->first;
-        objs->first = objs->first->next;
-        free(rm);
-    }
-    ObjectList_init(objs);
-}
+        if (obj->removed) {
+            ListNode* rmNode = iter;
 
-void ObjectList_clean(ObjectList* objs)
-{
-    ObjectListNode* iter = objs->first;
-    ObjectListNode* rm_node;
-    Object* rm_data;
-
-    // Remove the firsts if needed
-    while (iter != NULL && iter->data->removed)
-    {
-        rm_node = iter;
-        rm_data = rm_node->data;
-        objs->first = iter->next;
-
-        iter = iter->next;
-
-        free(rm_node);
-        free(rm_data); // NOTE: a struct 'Player' é passada, mas eu não sei se é alocada dinamicamente
-    }
-
-    // Remove the rest if needed
-    while (iter != NULL && iter->next != NULL)
-    {
-        if (iter->next->data->removed)
-        {
-            rm_node = iter->next;
-            rm_data = rm_node->data;
-            iter->next = rm_node->next;
-            free(rm_node);
-            free(rm_data);
+            iter = iter->next;
+            List_Remove(list, rmNode);
+        } else {
+            iter = iter->next;
         }
-
-        iter = iter->next;
     }
 }
+
+// static inline bool ObjectList_empty(ObjectList* objs)
+// {
+//     return objs->first == NULL;
+// }
+
+// void ObjectList_init(ObjectList* objs)
+// {
+//     objs->first = NULL;
+//     objs->last = NULL;
+// }
+
+// void ObjectList_append(ObjectList* objects, Object* object)
+// {
+//     ObjectListNode* new_node = (ObjectListNode*)malloc(sizeof(ObjectListNode));
+//     new_node->data = object;
+//     new_node->next = NULL;
+
+//     if (ObjectList_empty(objects))
+//     {
+//         objects->first = new_node;
+//         objects->last = new_node;
+//     }
+//     else
+//     {
+//         objects->last->next = new_node;
+//         objects->last = new_node;
+//     }
+// }
+
+// void ObjectList_free(ObjectList* objs)
+// {
+//     while (!ObjectList_empty(objs))
+//     {
+//         ObjectListNode* rm = objs->first;
+//         objs->first = objs->first->next;
+//         free(rm);
+//     }
+//     ObjectList_init(objs);
+// }
+
+// void ObjectList_clean(ObjectList* objs)
+// {
+//     ObjectListNode* iter = objs->first;
+//     ObjectListNode* rm_node;
+//     Object* rm_data;
+
+//     // Remove the firsts if needed
+//     while (iter != NULL && iter->data->removed)
+//     {
+//         rm_node = iter;
+//         rm_data = rm_node->data;
+//         objs->first = iter->next;
+
+//         iter = iter->next;
+
+//         free(rm_node);
+//         free(rm_data); // NOTE: a struct 'Player' é passada, mas eu não sei se é alocada dinamicamente
+//     }
+
+//     // Remove the rest if needed
+//     while (iter != NULL && iter->next != NULL)
+//     {
+//         if (iter->next->data->removed)
+//         {
+//             rm_node = iter->next;
+//             rm_data = rm_node->data;
+//             iter->next = rm_node->next;
+
+//             free(rm_node);
+//             free(rm_data);
+//         }
+
+//         iter = iter->next;
+//     }
+// }
 
 // Object constructors
 
@@ -103,7 +122,8 @@ Object* Types_CreateObject(Level* level, ObjectTypeId typeId, int r, int c)
     Types_InitObject(object, typeId);
     object->x = CELL_SIZE * c;
     object->y = CELL_SIZE * r;
-    ObjectList_append(&level->objects, object);
+    // ObjectList_append(&level->objects, object);
+    List_Insert(&level->objects, object);
     return object;
 }
 
@@ -135,10 +155,11 @@ void Types_InitPlayer(Player* player)
     player->onLadder = false;
     player->health = 100;
     player->invincibility = 0;
-    player->lives = 3;
+    player->lives = 99;
     player->coins = 0;
     player->keys = 0;
-    ObjectList_init(&player->items);
+    // ObjectList_init(&player->items);
+    List_Init(&player->items);
 }
 
 void Types_InitLevel(Level* level)
@@ -155,7 +176,8 @@ void Types_InitLevel(Level* level)
     level->r = 0;
     level->c = 0;
 
-    ObjectList_init(&level->objects);
+    // ObjectList_init(&level->objects);
+    List_Init(&level->objects);
 }
 
 

@@ -447,7 +447,8 @@ static void Game_ProcessPlayer()
 
 static void Game_ProcessObjects()
 {
-    for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    // for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    for (ListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
     {
         Object* object = iter->data;
 
@@ -546,7 +547,8 @@ static void Game_ProcessFrame()
     if (current_time >= game.cleanTime)
     {
         game.cleanTime = current_time + CLEAN_PERIOD;
-        ObjectList_clean(&level->objects);
+        // ObjectList_clean(&level->objects);
+        Types_ClearList(&level->objects);
     }
 
 #ifdef DEBUG_MODE

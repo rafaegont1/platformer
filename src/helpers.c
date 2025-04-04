@@ -109,7 +109,8 @@ bool Util_FindNearDoor(int* r, int* c)
 
 Object* Util_FindNearItem(int r, int c)
 {
-    for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    // for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    for (ListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
     {
         Object* object = iter->data;
 
@@ -131,7 +132,8 @@ Object* Util_FindNearItem(int r, int c)
 
 Object* Util_FindObject(Level* level, ObjectTypeId typeId)
 {
-    for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    // for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    for (ListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
     {
         Object* object = iter->data;
 

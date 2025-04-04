@@ -206,7 +206,8 @@ void Render_DrawScreen()
     // Objects
     const double dt = FrameControl_GetElapsedFrameTime() / 1000.0;
 
-    for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    // for (ObjectListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
+    for (ListNode* iter = level->objects.first; iter != NULL; iter = iter->next)
     {
         Object* object = iter->data;
         Animation* anim = &object->anim;

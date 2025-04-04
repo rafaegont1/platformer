@@ -10,6 +10,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <SDL2/SDL.h>
+#include "List.h"
 
 //#define DEBUG_MODE
 
@@ -175,15 +176,15 @@ typedef struct Object_s {
 //     int count;
 // } ObjectArray;
 
-typedef struct ObjectListNode {
-    Object* data;
-    struct ObjectListNode* next;
-} ObjectListNode;
+// typedef struct ObjectListNode {
+//     Object* data;
+//     struct ObjectListNode* next;
+// } ObjectListNode;
 
-typedef struct {
-    ObjectListNode* first;
-    ObjectListNode* last;
-} ObjectList;
+// typedef struct {
+//     ObjectListNode* first;
+//     ObjectListNode* last;
+// } ObjectList;
 
 // Player inherits Object, so must begin with its fields
 typedef struct {
@@ -203,12 +204,12 @@ typedef struct {
     int lives;
     int coins;
     int keys;
-    ObjectList items;
+    List items;
 } Player;
 
 typedef struct {
     ObjectType* cells[ROW_COUNT][COLUMN_COUNT];
-    ObjectList objects;
+    List objects;
     int r;
     int c;
     void (*init)();
@@ -219,10 +220,13 @@ typedef struct {
 // void ObjectArray_free(ObjectArray* objects);
 // void ObjectArray_clean(ObjectArray* objects);
 // void ObjectArray_sortByDepth(ObjectArray* objects);
-void ObjectList_init(ObjectList* objs);
-void ObjectList_append(ObjectList* objects, Object* object);
-void ObjectList_free(ObjectList* objs);
-void ObjectList_clean(ObjectList* objs);
+
+// void ObjectList_init(ObjectList* objs);
+// void ObjectList_append(ObjectList* objects, Object* object);
+// void ObjectList_free(ObjectList* objs);
+// void ObjectList_clean(ObjectList* objs);
+
+void Types_ClearList(List* list);
 
 void Types_CreateStaticObject(Level* level, ObjectTypeId typeId, int r, int c);
 Object* Types_CreateObject(Level* level, ObjectTypeId typeId, int r, int c);

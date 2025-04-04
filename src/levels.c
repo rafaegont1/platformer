@@ -99,7 +99,7 @@ static void initLevelsFromString(const char* string)
             level->r = lr;
             level->c = lc;
             // ObjectArray_append(&level->objects, (Object*)&player);
-            ObjectList_append(&level->objects, (Object*)&player);
+            List_Insert(&level->objects, &player);
 
             // Iterate over the level cells and create objects
             for (int r = 0; r < ROW_COUNT; r++)
