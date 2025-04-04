@@ -74,14 +74,8 @@ void ObjectList_clean(ObjectList* objs)
         free(rm_data); // NOTE: a struct 'Player' é passada, mas eu não sei se é alocada dinamicamente
     }
 
-    // Exit function if there isn't any more objects
-    if (iter == NULL)
-    {
-        return;
-    }
-
     // Remove the rest if needed
-    while (iter->next != NULL)
+    while (iter != NULL && iter->next != NULL)
     {
         if (iter->next->data->removed)
         {
