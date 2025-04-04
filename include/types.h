@@ -7,12 +7,13 @@
 #ifndef TYPES_H
 #define TYPES_H
 
-#include "SDL.h"
+#include <stdint.h>
+#include <stdbool.h>
+#include <SDL2/SDL.h>
 
 //#define DEBUG_MODE
 
-typedef enum
-{
+typedef enum {
     LEVEL_WIDTH = 320,
     LEVEL_HEIGHT = 240,
     SPRITE_SIZE = 16,
@@ -25,19 +26,17 @@ typedef enum
     FRAME_RATE = 48  // If <= 0, renders without upper fps limit
 } Constant;
 
-extern const double MAX_DELTA_TIME; // Maximum delta time at which the hit test still works, milliseconds
-extern const double MAX_SPEED;      // Maximum speed at which the hit test still works, pixels per second
+extern const uint64_t MAX_DELTA_TIME; // Maximum delta time at which the hit test still works, milliseconds
+extern const uint64_t MAX_SPEED;      // Maximum speed at which the hit test still works, pixels per second
 
-typedef enum
-{
+typedef enum {
     MESSAGE_PLAYER_KILLED = 0,
     MESSAGE_GAME_OVER,
     MESSAGE_LEVEL_COMPLETE,
     MESSAGE_COUNT
 } MessageId;
 
-typedef enum
-{
+typedef enum {
     TYPE_NONE = 0,
 
     TYPE_GHOST,
@@ -108,8 +107,7 @@ typedef enum
     TYPE_SPIKE
 } ObjectTypeId;
 
-typedef enum
-{
+typedef enum {
     SOLID_LEFT = 1,
     SOLID_RIGHT = 2,
     SOLID_TOP = 4,
@@ -117,8 +115,7 @@ typedef enum
     SOLID_ALL = SOLID_LEFT | SOLID_RIGHT | SOLID_TOP | SOLID_BOTTOM
 } SolidFlags;
 
-typedef struct
-{
+typedef struct {
     double left;
     double right;
     double top;
@@ -127,12 +124,11 @@ typedef struct
 
 struct Object_s;
 typedef struct Object_s Object;
-typedef void (*OnInit)( Object* );
-typedef void (*OnFrame)( Object* );
-typedef void (*OnHit)( Object* );
+typedef void (*OnInit)(Object*);
+typedef void (*OnFrame)(Object*);
+typedef void (*OnHit)(Object*);
 
-typedef struct
-{
+typedef struct {
     ObjectTypeId typeId;
     ObjectTypeId generalTypeId;
     SDL_Rect sprite; // Sprite rect in the spritesheet, unscaled
@@ -144,89 +140,97 @@ typedef struct
     OnHit onHit;
 } ObjectType;
 
-typedef enum
-{
+typedef enum {
     ANIMATION_FRAME,
     ANIMATION_FLIP,
     ANIMATION_WAVE
 } AnimationType;
 
-typedef struct
-{
+typedef struct {
     AnimationType type;
     int frame;
     int frameStart;
     int frameEnd;
     double frameDelay;          // Seconds
     double frameDelayCounter;   // Seconds
-    int flip;
+    SDL_RendererFlip flip;
     int alpha;
 } Animation;
 
-typedef struct Object_s
-{
+typedef struct Object_s {
     ObjectType* type;
     Animation anim;
     double x;
     double y;
     double vx;      // Pixels per second
     double vy;      // Pixels per second
-    int removed;
+    bool removed;
     int state;
     int data;
 } Object;
 
-typedef struct
-{
-    Object** array;
-    int reserved;
-    int count;
-} ObjectArray;
+// typedef struct {
+//     Object** array;
+//     int reserved;
+//     int count;
+// } ObjectArray;
+
+typedef struct ObjectListNode {
+    Object* data;
+    struct ObjectListNode* next;
+} ObjectListNode;
+
+typedef struct {
+    ObjectListNode* first;
+    ObjectListNode* last;
+} ObjectList;
 
 // Player inherits Object, so must begin with its fields
-typedef struct
-{
+typedef struct {
     ObjectType* type;
     Animation anim;
     double x;
     double y;
     double vx;
     double vy;
-    int removed;        // Unused
+    bool removed;       // Unused
     int state;          // Unused
     int data;           // Unused
-    int inAir;
-    int onLadder;
-    int health;
+    bool inAir;
+    bool onLadder;
+    int8_t health;
     int invincibility;  // How long player is invincibile, in ms
     int lives;
     int coins;
     int keys;
-    ObjectArray items;
+    ObjectList items;
 } Player;
 
-typedef struct
-{
+typedef struct {
     ObjectType* cells[ROW_COUNT][COLUMN_COUNT];
-    ObjectArray objects;
+    ObjectList objects;
     int r;
     int c;
     void (*init)();
 } Level;
 
-void ObjectArray_init( ObjectArray* objects );
-void ObjectArray_append( ObjectArray* objects, Object* object );
-void ObjectArray_free( ObjectArray* objects );
-void ObjectArray_clean( ObjectArray* objects );
-void ObjectArray_sortByDepth( ObjectArray* objects );
+// void ObjectArray_init(ObjectArray* objects);
+// void ObjectArray_append(ObjectArray* objects, Object* object);
+// void ObjectArray_free(ObjectArray* objects);
+// void ObjectArray_clean(ObjectArray* objects);
+// void ObjectArray_sortByDepth(ObjectArray* objects);
+void ObjectList_init(ObjectList* objs);
+void ObjectList_append(ObjectList* objects, Object* object);
+void ObjectList_free(ObjectList* objs);
+void ObjectList_clean(ObjectList* objs);
 
-void createStaticObject( Level* level, ObjectTypeId typeId, int r, int c );
-Object* createObject( Level* level, ObjectTypeId typeId, int r, int c );
-void initObject( Object* object, ObjectTypeId typeId );
-void initPlayer( Player* player );
-void initLevel( Level* level );
-void initTypes();
+void Types_CreateStaticObject(Level* level, ObjectTypeId typeId, int r, int c);
+Object* Types_CreateObject(Level* level, ObjectTypeId typeId, int r, int c);
+void Types_InitObject(Object* object, ObjectTypeId typeId);
+void Types_InitPlayer(Player* player);
+void Types_InitLevel(Level* level);
+void Types_InitTypes();
 
 extern ObjectType objectTypes[TYPE_COUNT];
 
-#endif
+#endif // TYPES_H

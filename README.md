@@ -44,8 +44,8 @@ The graphics "Simple broad-purpose tileset" by:
   - surt (Carl Olsson): http://opengameart.org/users/surt 
   - Sharm (Lanea Zimmerman): http://opengameart.org/users/sharm
   - vk: http://opengameart.org/users/vk
-  
+
 Link: http://opengameart.org/content/simple-broad-purpose-tileset
-  
+
 The font "Press Start 2P" by Cody "CodeMan38" Boisclair.
 Link: http://zone38.net/font/#pressstart

@@ -4,11 +4,21 @@
  * This software is provided "AS IS", WITHOUT ANY WARRANTY, express or implied.
  ******************************************************************************/
 
-#include "game.h"
+#ifndef GAME_H
+#define GAME_H
 
-int main( int argc, char* argv[] )
-{
-    initGame();
-    runGame();
-    return 0;
-}
+#include "types.h"
+
+extern Level* level;
+extern Player player;
+
+void Game_Init();
+void Game_run();
+
+void Game_SetLevel(int r, int c);
+void Game_CompleteLevel();
+
+void Game_DamagePlayer(int damage);
+void Game_KillPlayer();
+
+#endif // GAME_H

@@ -1,6 +1,2 @@
-.*
-/Release
-/Debug
-/misc
-
-!.gitignore
+build
+.cache

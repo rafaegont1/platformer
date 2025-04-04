@@ -4,21 +4,18 @@
  * This software is provided "AS IS", WITHOUT ANY WARRANTY, express or implied.
  ******************************************************************************/
 
-#ifndef GAME_H
-#define GAME_H
+#ifndef LEVELS_H
+#define LEVELS_H
 
 #include "types.h"
 
-extern Level* level;
-extern Player player;
+enum {
+    LEVEL_COUNTX = 2,
+    LEVEL_COUNTY = 2
+};
 
-void initGame();
-void runGame();
+extern Level levels[LEVEL_COUNTY][LEVEL_COUNTX];
 
-void setLevel( int r, int c );
-void completeLevel();
+void Levels_Init();
 
-void damagePlayer( int damage );
-void killPlayer();
-
-#endif
+#endif // LEVELS_H
